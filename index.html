@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Miel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
+
+        :root {
+            --f: -apple-system, "SF Pro Text", "SF Pro Display", "DM Sans", sans-serif;
+            --t: #e0e0e0;
+            --td: #aaaaaa;
+            --b: #ffffff;
+            --bd: rgba(255, 255, 255, 0.12);
+            --dot-border: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            color: var(--t);
+            font-family: var(--f);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gate {
+            position: fixed;
+            inset: 0;
+            background: #050505;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 200;
+        }
+
+        .gate-cross {
+            font-size: 52px;
+            color: rgba(255, 255, 255, 0.9);
+            animation: breathe 3s ease-in-out infinite;
+            user-select: none;
+            font-family: serif;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.3; transform: scale(0.96); }
+            50% { opacity: 1; transform: scale(1.04); }
+        }
+
+        .gate.closing {
+            animation: gateOut 0.85s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        }
+
+        @keyframes gateOut {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.05); display: none; }
+        }
+
+        .wrap {
+            max-width: 440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            padding: 8px 4px 24px;
+            position: relative;
+        }
+
+        /* ---- header: photo + name side by side ---- */
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dot {
+            width: 13px;
+            height: 13px;
+            background: #43b581;
+            border: 2px solid var(--dot-border);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+        }
+
+        .user-info h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--b);
+            letter-spacing: -0.3px;
+            margin-bottom: 4px;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: var(--td);
+            font-weight: 400;
+            min-height: 16px;
+        }
+
+        .type-cursor {
+            color: var(--b);
+            margin-left: 1px;
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* ---- social links row ---- */
+        .social-links {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .lnk {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            flex: 1 1 auto;
+            padding: 12px 10px;
+            text-decoration: none;
+            color: var(--t);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--bd);
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .lnk:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--b);
+        }
+
+        /* ---- widgets: spotify (lanyard) + clock ---- */
+        .mini-widgets {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mini-card {
+            flex: 1;
+            min-width: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--bd);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mini-card-empty {
+            font-size: 11px;
+            color: var(--td);
+            text-align: center;
+            width: 100%;
+        }
+
+        .spotify-card { gap: 10px; }
+
+        .spotify-art {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .spotify-info { min-width: 0; flex: 1; }
+
+        .spotify-song {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--b);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .spotify-artist {
+            font-size: 11px;
+            color: var(--td);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 6px;
+        }
+
+        .spotify-bar {
+            height: 3px;
+            background: var(--bd);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .spotify-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--b);
+            transition: width 0.5s linear;
+        }
+
+        .clock-card {
+            flex-direction: column;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .clock-time {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--b);
+            letter-spacing: 0.3px;
+        }
+
+        .clock-date {
+            font-size: 11px;
+            color: var(--td);
+            margin-top: 2px;
+        }
+
+        .clock-you {
+            font-size: 10.5px;
+            color: var(--td);
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .stats-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--bd);
+            color: var(--b);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat { display: flex; align-items: center; gap: 6px; }
+        .stat-divider { color: var(--td); font-weight: 300; }
+
+        .foot {
+            text-align: center;
+            font-size: 12px;
+            color: var(--td);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* ---- background image ---- */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: url('https://files.catbox.moe/gzpjva.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* ---- oneko ---- */
+        #oneko {
+            position: fixed;
+            pointer-events: none;
+            image-rendering: pixelated;
+            z-index: 999999;
+            width: 32px;
+            height: 32px;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .wrap { padding: 24px 16px; }
+            .lnk { font-size: 11px; padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body data-theme="glass">
+    <div class="gate" id="gate">
+        <span class="gate-cross">✞</span>
+    </div>
+
+    <div id="oneko"></div>
+
+    <div class="wrap" id="wrap">
+        <div class="card reveal">
+
+            <div class="header-row">
+                <div class="avatar-wrap">
+                    <img src="https://files.catbox.moe/6kk05q.png" alt="avatar" class="avatar">
+                    <div id="dot" class="dot"></div>
+                </div>
+                <div class="user-info">
+                    <h1>Miel</h1>
+                    <p class="tagline"><span id="typewriter"></span><span class="type-cursor">|</span></p>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="https://discord.com/users/1239726174511300648" target="_blank" class="lnk dc">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/>
+                    </svg>
+                    <span>my Discord profile</span>
+                </a>
+                <a href="https://www.tiktok.com/@kajotakajotakajota" target="_blank" class="lnk tt">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.46-.77-.53-1.43-1.19-1.93-1.97V15.5c-.01 1.61-.41 3.23-1.32 4.54-1.5 2.13-4.15 3.32-6.73 2.94-2.23-.33-4.22-1.85-5.11-3.95-1.05-2.52-.46-5.71 1.51-7.53 1.4-1.29 3.31-1.91 5.2-1.7v4.11c-1.07-.15-2.22.11-3.01.89-.86.84-1.01 2.21-.45 3.23.51.92 1.54 1.5 2.59 1.49 1.48-.01 2.72-1.31 2.72-2.78V.02z"/>
+                    </svg>
+                    <span>My tiktok profile</span>
+                </a>
+                <a href="https://www.roblox.com/users/3792532839/profile" target="_blank" class="lnk rb">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.5 24L0 18.5L5.5 0L24 5.5L18.5 24Z"/>
+                    </svg>
+                    <span>My roblox profile</span>
+                </a>
+            </div>
+
+            <div class="mini-widgets">
+                <div class="mini-card spotify-card" id="spotify-widget">
+                    <div class="mini-card-empty">loading spotify...</div>
+                </div>
+                <div class="mini-card clock-card">
+                    <div class="clock-time" id="clock-time">--:--:--</div>
+                    <div class="clock-date" id="clock-date">--- · ---</div>
+                    <div class="clock-you" id="clock-you"></div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span id="view-count">0</span>
+                </div>
+                <div class="stat-divider">|</div>
+                <div class="stat">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    BR
+                </div>
+            </div>
+        </div>
+
+        <p class="foot">made with love by miel^^</p>
+        <p class="foot">last updated August 12, 2026</p>
+        <p class="foot">est. March 14, 2026</p>
+    </div>
+
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <audio id="bg-audio" loop preload="auto">
+        <source src="https://files.catbox.moe/tbf3q5.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBP6_x00NmTX9yRNA2LpTdk0cPJQfIgbgs",
+            authDomain: "miel-website-50a32.firebaseapp.com",
+            databaseURL: "https://miel-website-50a32-default-rtdb.firebaseio.com",
+            projectId: "miel-website-50a32",
+            storageBucket: "miel-website-50a32.firebasestorage.app",
+            messagingSenderId: "386877582726",
+            appId: "1:386877582726:web:c914fa9344d05a53aa5007"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.database();
+        var viewRef = db.ref('contador');
+
+        if (!localStorage.getItem('miel_view_counted')) {
+            viewRef.transaction(function(c) { return (c || 0) + 1; });
+            localStorage.setItem('miel_view_counted', 'true');
+        }
+
+        viewRef.on('value', function(snap) {
+            var el = document.getElementById('view-count');
+            if (el) el.innerText = snap.val() || 0;
+        });
+
+        var gate = document.getElementById('gate');
+        var bgAudio = document.getElementById('bg-audio');
+
+        if (gate) {
+            gate.addEventListener('click', function() {
+                gate.classList.add('closing');
+                gate.addEventListener('animationend', function() {
+                    gate.style.display = 'none';
+                    observeReveal();
+                    initOneko();
+                    typewriterEffect(document.getElementById('typewriter'), 'A negative mind will never give you a positive life.', 45);
+                    if (bgAudio) {
+                        bgAudio.volume = 0.5;
+                        bgAudio.play().catch(function() {});
+                    }
+                }, { once: true });
+            });
+        }
+
+        function observeReveal() {
+            var els = document.querySelectorAll('.reveal');
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(en, i) {
+                        if (en.isIntersecting) {
+                            setTimeout(function() { en.target.classList.add('visible'); }, i * 90);
+                            io.unobserve(en.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                els.forEach(function(el) { io.observe(el); });
+            } else {
+                els.forEach(function(el) { el.classList.add('visible'); });
+            }
+        }
+
+        /* ---- discord status + spotify (lanyard) ---- */
+        var LANYARD_ID = '1239726174511300648';
+        var currentSpotify = null;
+
+        function fetchDiscordStatus() {
+            fetch('https://api.lanyard.rest/v1/users/' + LANYARD_ID)
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    if (!d || !d.data) return;
+
+                    var dot = document.getElementById('dot');
+                    var map = { online: '#43b581', dnd: '#f04747', idle: '#faa61a', offline: '#747f8d' };
+                    var status = d.data.discord_status || 'offline';
+                    if (dot) dot.style.backgroundColor = map[status] || '#ccc';
+
+                    var widget = document.getElementById('spotify-widget');
+                    if (!widget) return;
+
+                    if (d.data.listening_to_spotify && d.data.spotify) {
+                        var s = d.data.spotify;
+                        currentSpotify = s;
+                        widget.innerHTML =
+                            '<img class="spotify-art" src="' + s.album_art_url + '" alt="album art">' +
+                            '<div class="spotify-info">' +
+                                '<div class="spotify-song">' + s.song + '</div>' +
+                                '<div class="spotify-artist">' + s.artist + '</div>' +
+                                '<div class="spotify-bar"><div class="spotify-bar-fill" id="spotify-bar-fill"></div></div>' +
+                            '</div>';
+                    } else {
+                        currentSpotify = null;
+                        widget.innerHTML = '<div class="mini-card-empty">not listening rn</div>';
+                    }
+                })
+                .catch(function() {});
+        }
+
+        function updateSpotifyBar() {
+            if (!currentSpotify || !currentSpotify.timestamps) return;
+            var fill = document.getElementById('spotify-bar-fill');
+            if (!fill) return;
+            var now = Date.now();
+            var start = currentSpotify.timestamps.start;
+            var end = currentSpotify.timestamps.end;
+            var pct = Math.min(100, Math.max(0, ((now - start) / (end - start)) * 100));
+            fill.style.width = pct + '%';
+        }
+
+        /* ---- clock ---- */
+        var OWNER_OFFSET_MINUTES = -180; // BRT, UTC-3
+
+        function updateClock() {
+            var now = new Date();
+            var ownerTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+
+            var hh = String(ownerTime.getHours()).padStart(2, '0');
+            var mm = String(ownerTime.getMinutes()).padStart(2, '0');
+            var ss = String(ownerTime.getSeconds()).padStart(2, '0');
+            var timeEl = document.getElementById('clock-time');
+            if (timeEl) timeEl.textContent = hh + ':' + mm + ':' + ss;
+
+            var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var dateEl = document.getElementById('clock-date');
+            if (dateEl) dateEl.textContent = days[ownerTime.getDay()] + ', ' + months[ownerTime.getMonth()] + ' ' + ownerTime.getDate() + ' · BRT';
+
+            var visitorOffsetMinutes = -now.getTimezoneOffset();
+            var diffHours = Math.round((visitorOffsetMinutes - OWNER_OFFSET_MINUTES) / 60);
+            var sign = diffHours > 0 ? '+' : '';
+            var vh = String(now.getHours()).padStart(2, '0');
+            var vm = String(now.getMinutes()).padStart(2, '0');
+            var youEl = document.getElementById('clock-you');
+            if (youEl) youEl.textContent = 'your time: ' + vh + ':' + vm + ' (' + sign + diffHours + 'h)';
+        }
+
+        /* ---- typewriter effect ---- */
+        function typewriterEffect(el, text, speed) {
+            if (!el) return;
+            var i = 0;
+            function type() {
+                if (i <= text.length) {
+                    el.textContent = text.slice(0, i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        /* ---- oneko: sits on Discord button, then runs over to the profile photo and settles there ---- */
+        function initOneko() {
+            var nekoEl = document.getElementById('oneko');
+            if (!nekoEl) return;
+
+            nekoEl.style.display = 'block';
+
+            var nekoSpriteUrl = 'https://cdn.jsdelivr.net/gh/adryd325/oneko.js@master/oneko.gif';
+            nekoEl.style.backgroundImage = 'url(' + nekoSpriteUrl + ')';
+
+            var spriteSets = {
+                idle: [[-3, -3]],
+                scratchSelf: [[-5, 0], [-6, 0], [-7, 0]],
+                tired: [[-3, -2]],
+                sleeping: [[-2, 0], [-2, -1]],
+                N: [[-1, -2], [-1, -3]],
+                NE: [[0, -2], [0, -3]],
+                E: [[-3, 0], [-3, -1]],
+                SE: [[-5, -1], [-5, -2]],
+                S: [[-6, -3], [-7, -2]],
+                SW: [[-5, -3], [-6, -1]],
+                W: [[-4, -2], [-4, -3]],
+                NW: [[-1, 0], [-1, -1]]
+            };
+
+            function setSprite(name, frame) {
+                var set = spriteSets[name] || spriteSets.idle;
+                var sprite = set[frame % set.length];
+                nekoEl.style.backgroundPosition = (sprite[0] * 32) + 'px ' + (sprite[1] * 32) + 'px';
+            }
+
+            function getPerchSpot(el) {
+                var r = el.getBoundingClientRect();
+                return { x: r.left + r.width / 2 - 16, y: r.top - 20 };
+            }
+
+            var avatarWrap = document.querySelector('.avatar-wrap');
+
+            var catX = 16, catY = -40;
+            var phase = 'running'; // running -> idleEnd
+            var idleTime = 0;
+            var idleAnimation = null;
+            var idleAnimationFrame = 0;
+            var frameCount = 0;
+            var lastTickTs = null;
+
+            function resetIdleAnimation() {
+                idleAnimation = null;
+                idleAnimationFrame = 0;
+            }
+
+            function idleStep() {
+                idleTime += 1;
+                if (idleTime > 8 && Math.floor(Math.random() * 120) === 0 && idleAnimation === null) {
+                    idleAnimation = ['sleeping', 'scratchSelf'][Math.floor(Math.random() * 2)];
+                }
+                switch (idleAnimation) {
+                    case 'sleeping':
+                        if (idleAnimationFrame < 8) { setSprite('tired', 0); break; }
+                        setSprite('sleeping', Math.floor(idleAnimationFrame / 4));
+                        if (idleAnimationFrame > 192) resetIdleAnimation();
+                        break;
+                    case 'scratchSelf':
+                        setSprite('scratchSelf', idleAnimationFrame);
+                        if (idleAnimationFrame > 9) resetIdleAnimation();
+                        break;
+                    default:
+                        setSprite('idle', 0);
+                        return;
+                }
+                idleAnimationFrame += 1;
+            }
+
+            function runStep() {
+                if (!avatarWrap) { phase = 'idleEnd'; return; }
+                var target = getPerchSpot(avatarWrap);
+                var diffX = catX - target.x;
+                var diffY = catY - target.y;
+                var distance = Math.sqrt(diffX * diffX + diffY * diffY);
+
+                if (distance < 8) {
+                    catX = target.x;
+                    catY = target.y;
+                    phase = 'idleEnd';
+                    idleTime = 0;
+                    resetIdleAnimation();
+                    return;
+                }
+
+                var speed = 7;
+                var direction = diffY / distance > 0.5 ? 'N' : '';
+                direction += diffY / distance < -0.5 ? 'S' : '';
+                direction += diffX / distance > 0.5 ? 'W' : '';
+                direction += diffX / distance < -0.5 ? 'E' : '';
+                setSprite(direction || 'S', frameCount);
+
+                catX -= (diffX / distance) * speed;
+                catY -= (diffY / distance) * speed;
+            }
+
+            function tick(ts) {
+                if (!lastTickTs) lastTickTs = ts;
+                if (ts - lastTickTs > 100) {
+                    lastTickTs = ts;
+                    frameCount += 1;
+
+                    if (phase === 'running') {
+                        runStep();
+                    } else {
+                        idleStep();
+                    }
+
+                    nekoEl.style.left = catX + 'px';
+                    nekoEl.style.top = catY + 'px';
+                }
+                window.requestAnimationFrame(tick);
+            }
+
+            if (avatarWrap) {
+                var start = getPerchSpot(avatarWrap);
+                catX = start.x;
+            }
+            nekoEl.style.left = catX + 'px';
+            nekoEl.style.top = catY + 'px';
+
+            window.addEventListener('resize', function() {
+                if (phase === 'idleEnd' && avatarWrap) {
+                    var t = getPerchSpot(avatarWrap);
+                    catX = t.x;
+                    catY = t.y;
+                }
+            });
+
+            window.requestAnimationFrame(tick);
+        }
+
+        fetchDiscordStatus();
+        setInterval(fetchDiscordStatus, 15000);
+        setInterval(updateSpotifyBar, 1000);
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
