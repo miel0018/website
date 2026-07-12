@@ -152,41 +152,42 @@
             50% { opacity: 0; }
         }
 
-        /* ---- social links row ---- */
+        /* ---- social links row (icons only) ---- */
         .social-links {
             display: flex;
             flex-direction: row;
-            flex-wrap: wrap;
-            gap: 8px;
+            justify-content: center;
+            gap: 14px;
             margin-bottom: 20px;
         }
 
-        .lnk {
+        .icon-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 7px;
-            flex: 1 1 auto;
-            padding: 12px 10px;
             text-decoration: none;
-            color: var(--t);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--bd);
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
         }
 
-        .lnk:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: var(--b);
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
         }
 
-        /* ---- widgets: spotify (lanyard) + clock ---- */
+        .icon-btn svg {
+            width: 21px;
+            height: 21px;
+            fill: #ffffff;
+        }
+
+        /* ---- widgets: mini player (cd + play/pause) + clock ---- */
         .mini-widgets {
             display: flex;
             gap: 10px;
@@ -204,55 +205,56 @@
             align-items: center;
         }
 
-        .mini-card-empty {
-            font-size: 11px;
-            color: var(--td);
-            text-align: center;
-            width: 100%;
-        }
+        .player-card { gap: 10px; }
 
-        .spotify-card { gap: 10px; }
-
-        .spotify-art {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            object-fit: cover;
+        .play-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             flex-shrink: 0;
+            transition: background 0.2s ease;
         }
 
-        .spotify-info { min-width: 0; flex: 1; }
-
-        .spotify-song {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--b);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .play-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .spotify-artist {
+        .play-btn svg {
+            width: 12px;
+            height: 12px;
+            fill: #ffffff;
+        }
+
+        .player-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .player-time {
             font-size: 11px;
             color: var(--td);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             margin-bottom: 6px;
+            white-space: nowrap;
         }
 
-        .spotify-bar {
+        .player-bar {
             height: 3px;
             background: var(--bd);
             border-radius: 2px;
             overflow: hidden;
         }
 
-        .spotify-bar-fill {
+        .player-bar-fill {
             height: 100%;
             width: 0%;
             background: var(--b);
-            transition: width 0.5s linear;
+            transition: width 0.15s linear;
         }
 
         .clock-card {
@@ -295,6 +297,11 @@
 
         .stat { display: flex; align-items: center; gap: 6px; }
         .stat-divider { color: var(--td); font-weight: 300; }
+
+        .footer-block {
+            margin-top: 60px;
+            opacity: 0.45;
+        }
 
         .foot {
             text-align: center;
@@ -342,7 +349,6 @@
 
         @media (max-width: 480px) {
             .wrap { padding: 24px 16px; }
-            .lnk { font-size: 11px; padding: 10px 8px; }
         }
     </style>
 </head>
@@ -368,29 +374,34 @@
             </div>
 
             <div class="social-links">
-                <a href="https://discord.com/users/1239726174511300648" target="_blank" class="lnk dc">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z"/>
+                <a href="https://discord.com/users/1239726174511300648" target="_blank" class="icon-btn" aria-label="Discord">
+                    <svg viewBox="0 0 640 512">
+                        <path d="M524.531,69.836a1.5,1.5,0,0,0-.764-.7A485.065,485.065,0,0,0,404.081,32.03a1.816,1.816,0,0,0-1.923.91,337.461,337.461,0,0,0-14.9,30.6,447.848,447.848,0,0,0-134.426,0,309.541,309.541,0,0,0-15.135-30.6,1.89,1.89,0,0,0-1.924-.91A483.689,483.689,0,0,0,116.085,69.137a1.712,1.712,0,0,0-.788.676C39.068,183.651,18.186,294.69,28.43,404.354a2.016,2.016,0,0,0,.765,1.375A487.666,487.666,0,0,0,176.02,479.918a1.9,1.9,0,0,0,2.063-.676A348.2,348.2,0,0,0,208.12,430.4a1.86,1.86,0,0,0-1.019-2.588,321.173,321.173,0,0,1-45.868-21.853,1.885,1.885,0,0,1-.185-3.126c3.082-2.309,6.166-4.711,9.109-7.137a1.819,1.819,0,0,1,1.9-.256c96.229,43.917,200.41,43.917,295.5,0a1.812,1.812,0,0,1,1.924.233c2.944,2.426,6.027,4.851,9.132,7.16a1.884,1.884,0,0,1-.162,3.126,301.407,301.407,0,0,1-45.89,21.83,1.875,1.875,0,0,0-1,2.611,391.055,391.055,0,0,0,30.014,48.815,1.864,1.864,0,0,0,2.063.7A486.048,486.048,0,0,0,610.7,405.729a1.882,1.882,0,0,0,.765-1.352C623.729,277.594,590.933,167.465,524.531,69.836ZM222.491,337.58c-28.972,0-52.844-26.587-52.844-59.239S193.056,219.1,222.491,219.1c29.665,0,53.306,26.82,52.843,59.239C275.334,310.993,251.924,337.58,222.491,337.58Zm195.38,0c-28.971,0-52.843-26.587-52.843-59.239S388.437,219.1,417.871,219.1c29.667,0,53.307,26.82,52.844,59.239C470.715,310.993,447.538,337.58,417.871,337.58Z"/>
                     </svg>
-                    <span>my Discord profile</span>
                 </a>
-                <a href="https://www.tiktok.com/@kajotakajotakajota" target="_blank" class="lnk tt">
-                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                <a href="https://www.tiktok.com/@kajotakajotakajota" target="_blank" class="icon-btn" aria-label="TikTok">
+                    <svg viewBox="0 0 24 24">
                         <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.6-4.13-1.46-.77-.53-1.43-1.19-1.93-1.97V15.5c-.01 1.61-.41 3.23-1.32 4.54-1.5 2.13-4.15 3.32-6.73 2.94-2.23-.33-4.22-1.85-5.11-3.95-1.05-2.52-.46-5.71 1.51-7.53 1.4-1.29 3.31-1.91 5.2-1.7v4.11c-1.07-.15-2.22.11-3.01.89-.86.84-1.01 2.21-.45 3.23.51.92 1.54 1.5 2.59 1.49 1.48-.01 2.72-1.31 2.72-2.78V.02z"/>
                     </svg>
-                    <span>My tiktok profile</span>
                 </a>
-                <a href="https://www.roblox.com/users/3792532839/profile" target="_blank" class="lnk rb">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.5 24L0 18.5L5.5 0L24 5.5L18.5 24Z"/>
+
+                <a href="https://open.spotify.com/user/31nxtmzfu35tkxgziankv74zj6jq" target="_blank" class="icon-btn" aria-label="Spotify">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141 4.32-1.32 9.719-.66 13.439 1.62.361.181.54.78.301 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
                     </svg>
-                    <span>My roblox profile</span>
                 </a>
             </div>
 
             <div class="mini-widgets">
-                <div class="mini-card spotify-card" id="spotify-widget">
-                    <div class="mini-card-empty">loading spotify...</div>
+                <div class="mini-card player-card" id="player-widget">
+                    <button class="play-btn" id="play-pause-btn" type="button" aria-label="Play/Pause">
+                        <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg id="pause-icon" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+                    </button>
+                    <div class="player-info">
+                        <div class="player-time"><span id="current-time">0:00</span> / <span id="duration-time">0:00</span></div>
+                        <div class="player-bar"><div class="player-bar-fill" id="player-bar-fill"></div></div>
+                    </div>
                 </div>
                 <div class="mini-card clock-card">
                     <div class="clock-time" id="clock-time">--:--:--</div>
@@ -412,9 +423,11 @@
             </div>
         </div>
 
-        <p class="foot">made with love by miel^^</p>
-        <p class="foot">last updated August 12, 2026</p>
-        <p class="foot">est. March 14, 2026</p>
+        <div class="footer-block">
+            <p class="foot">made with love by miel^^</p>
+            <p class="foot">last updated August 12, 2026</p>
+            <p class="foot">est. March 14, 2026</p>
+        </div>
     </div>
 
     <div class="bg-image"></div>
@@ -461,6 +474,7 @@
                     gate.style.display = 'none';
                     observeReveal();
                     initOneko();
+                    initPlayer();
                     typewriterEffect(document.getElementById('typewriter'), 'A negative mind will never give you a positive life.', 45);
                     if (bgAudio) {
                         bgAudio.volume = 0.5;
@@ -487,9 +501,8 @@
             }
         }
 
-        /* ---- discord status + spotify (lanyard) ---- */
+        /* ---- discord status (lanyard) ---- */
         var LANYARD_ID = '1239726174511300648';
-        var currentSpotify = null;
 
         function fetchDiscordStatus() {
             fetch('https://api.lanyard.rest/v1/users/' + LANYARD_ID)
@@ -501,37 +514,61 @@
                     var map = { online: '#43b581', dnd: '#f04747', idle: '#faa61a', offline: '#747f8d' };
                     var status = d.data.discord_status || 'offline';
                     if (dot) dot.style.backgroundColor = map[status] || '#ccc';
-
-                    var widget = document.getElementById('spotify-widget');
-                    if (!widget) return;
-
-                    if (d.data.listening_to_spotify && d.data.spotify) {
-                        var s = d.data.spotify;
-                        currentSpotify = s;
-                        widget.innerHTML =
-                            '<img class="spotify-art" src="' + s.album_art_url + '" alt="album art">' +
-                            '<div class="spotify-info">' +
-                                '<div class="spotify-song">' + s.song + '</div>' +
-                                '<div class="spotify-artist">' + s.artist + '</div>' +
-                                '<div class="spotify-bar"><div class="spotify-bar-fill" id="spotify-bar-fill"></div></div>' +
-                            '</div>';
-                    } else {
-                        currentSpotify = null;
-                        widget.innerHTML = '<div class="mini-card-empty">not listening rn</div>';
-                    }
                 })
                 .catch(function() {});
         }
 
-        function updateSpotifyBar() {
-            if (!currentSpotify || !currentSpotify.timestamps) return;
-            var fill = document.getElementById('spotify-bar-fill');
-            if (!fill) return;
-            var now = Date.now();
-            var start = currentSpotify.timestamps.start;
-            var end = currentSpotify.timestamps.end;
-            var pct = Math.min(100, Math.max(0, ((now - start) / (end - start)) * 100));
-            fill.style.width = pct + '%';
+        /* ---- mini player: play/pause + spinning cd + time ---- */
+        function fmtTime(sec) {
+            if (isNaN(sec) || sec === Infinity) return '0:00';
+            var m = Math.floor(sec / 60);
+            var s = Math.floor(sec % 60);
+            return m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        function initPlayer() {
+            var audio = document.getElementById('bg-audio');
+            var cd = document.getElementById('cd-disc');
+            var btn = document.getElementById('play-pause-btn');
+            var playIcon = document.getElementById('play-icon');
+            var pauseIcon = document.getElementById('pause-icon');
+            var currentEl = document.getElementById('current-time');
+            var durationEl = document.getElementById('duration-time');
+            var barFill = document.getElementById('player-bar-fill');
+            if (!audio || !btn) return;
+
+            function setPlayingUI(isPlaying) {
+                if (cd) cd.classList.toggle('spinning', isPlaying);
+                if (playIcon) playIcon.style.display = isPlaying ? 'none' : 'block';
+                if (pauseIcon) pauseIcon.style.display = isPlaying ? 'block' : 'none';
+            }
+
+            btn.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play().catch(function() {});
+                } else {
+                    audio.pause();
+                }
+            });
+
+            audio.addEventListener('play', function() { setPlayingUI(true); });
+            audio.addEventListener('pause', function() { setPlayingUI(false); });
+
+            audio.addEventListener('loadedmetadata', function() {
+                if (durationEl) durationEl.textContent = fmtTime(audio.duration);
+            });
+
+            audio.addEventListener('timeupdate', function() {
+                if (currentEl) currentEl.textContent = fmtTime(audio.currentTime);
+                if (barFill && audio.duration) {
+                    barFill.style.width = ((audio.currentTime / audio.duration) * 100) + '%';
+                }
+            });
+
+            if (audio.readyState >= 1 && durationEl) {
+                durationEl.textContent = fmtTime(audio.duration);
+            }
+            setPlayingUI(!audio.paused);
         }
 
         /* ---- clock ---- */
@@ -713,7 +750,6 @@
 
         fetchDiscordStatus();
         setInterval(fetchDiscordStatus, 15000);
-        setInterval(updateSpotifyBar, 1000);
 
         updateClock();
         setInterval(updateClock, 1000);
